@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -22,6 +23,7 @@ import com.github.exabrial.formbinding.FormBindingWriter;
 
 @SuppressWarnings("unchecked")
 public class DefaultFormBindingWriter implements FormBindingWriter {
+	private static final Pattern JAVA_FIELD_PATTERN = Pattern.compile("^[a-z_][a-z0-9_-]*$", Pattern.CASE_INSENSITIVE);
 
 	@Override
 	public String write(Object object) {
@@ -75,6 +77,10 @@ public class DefaultFormBindingWriter implements FormBindingWriter {
 			key = key.trim();
 			if (key == "") {
 				key = null;
+			} else {
+				if (!JAVA_FIELD_PATTERN.matcher(key).matches()) {
+					throw new RuntimeException("Param name must match regex:" + JAVA_FIELD_PATTERN);
+				}
 			}
 		}
 		if (key == null) {
