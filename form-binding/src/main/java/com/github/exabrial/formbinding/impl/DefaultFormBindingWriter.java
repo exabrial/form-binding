@@ -10,18 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.beanutils.ConvertUtilsBean;
-
 import com.github.exabrial.formbinding.FormBindingWriter;
 
 public class DefaultFormBindingWriter implements FormBindingWriter {
-	private final ConvertUtilsBean cub;
-
-	public DefaultFormBindingWriter() {
-		cub = new ConvertUtilsBean();
-		CommonCode.loadSpiConverters(cub);
-	}
-
 	@Override
 	public String write(Object object) {
 		Set<Field> boundFields = extractBoundFields(object.getClass());
@@ -45,7 +36,7 @@ public class DefaultFormBindingWriter implements FormBindingWriter {
 			field.setAccessible(true);
 			Object value = field.get(object);
 			if (value != null) {
-				return (String) cub.convert(value, String.class);
+				return CommonCode.cub.convert(value);
 			} else {
 				return null;
 			}

@@ -35,6 +35,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.github.exabrial</groupId>
+			<artifactId>form-binding-test-module</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
 			<version>5.5.2</version>

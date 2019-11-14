@@ -141,6 +141,7 @@
 
 	<modules>
 		<module>form-binding-api</module>
+		<module>form-binding-test-module</module>
 		<module>form-binding</module>
 	</modules>
 

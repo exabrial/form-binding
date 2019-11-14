@@ -19,7 +19,7 @@ public class CustomBeanFormBindingConverter implements FormBindingConverter {
 	}
 
 	@Override
-	public Class<?> targetClass() {
+	public Class<CustomBean> targetClass() {
 		return CustomBean.class;
 	}
 }

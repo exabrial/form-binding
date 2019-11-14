@@ -12,17 +12,9 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import org.apache.commons.beanutils.ConvertUtilsBean;
-
 import com.github.exabrial.formbinding.FormBindingReader;
 
 public class DefaultFormBindingReader implements FormBindingReader {
-	private final ConvertUtilsBean cub;
-
-	public DefaultFormBindingReader() {
-		cub = new ConvertUtilsBean();
-		CommonCode.loadSpiConverters(cub);
-	}
 
 	@Override
 	public <ReturnType> ReturnType read(String input, Class<ReturnType> returnTypeClazz) {
@@ -36,7 +28,7 @@ public class DefaultFormBindingReader implements FormBindingReader {
 					field.setAccessible(true);
 					Class<?> type = field.getType();
 
-					Object object = cub.convert(valueMap.get(key), type);
+					Object object = CommonCode.cub.convert(valueMap.get(key), type);
 					field.set(returnValue, object);
 				}
 			}

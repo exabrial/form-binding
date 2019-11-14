@@ -17,6 +17,15 @@ import com.github.exabrial.formbinding.FormBindingTransient;
 @SuppressWarnings("unchecked")
 class CommonCode {
 	private static final Pattern JAVA_FIELD_PATTERN = Pattern.compile("^[a-z_][a-z0-9_-]*$", Pattern.CASE_INSENSITIVE);
+	public static final ConvertUtilsBean cub;
+
+	static {
+		cub = new ConvertUtilsBean();
+		ServiceLoader<FormBindingConverter> serviceLoader = ServiceLoader.load(FormBindingConverter.class);
+		for (FormBindingConverter converter : serviceLoader) {
+			cub.register(converter, converter.targetClass());
+		}
+	}
 
 	private CommonCode() {
 	}
