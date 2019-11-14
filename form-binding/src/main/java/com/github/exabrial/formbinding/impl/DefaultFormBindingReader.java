@@ -27,7 +27,6 @@ public class DefaultFormBindingReader implements FormBindingReader {
 				if (field != null) {
 					field.setAccessible(true);
 					Class<?> type = field.getType();
-
 					Object object = CommonCode.cub.convert(valueMap.get(key), type);
 					field.set(returnValue, object);
 				}

@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.apache.commons.beanutils.ConvertUtilsBean;
+import org.apache.commons.beanutils.Converter;
 
 import com.github.exabrial.formbinding.FormBindingConverter;
 import com.github.exabrial.formbinding.FormBindingParam;
@@ -21,10 +22,22 @@ class CommonCode {
 
 	static {
 		cub = new ConvertUtilsBean();
+		Converter existingStringConverter = cub.lookup(String.class);
 		ServiceLoader<FormBindingConverter> serviceLoader = ServiceLoader.load(FormBindingConverter.class);
 		for (FormBindingConverter converter : serviceLoader) {
 			System.out.println("FormBindingConverter Registered:" + converter.getClass().getSimpleName());
-			cub.register(converter, converter.targetClass());
+			Converter delegatingConverter = new Converter() {
+				@Override
+				public <T> T convert(Class<T> type, Object value) {
+					if (type.equals(converter.targetClass()) || value.getClass().equals(converter.targetClass())) {
+						return converter.convert(type, value);
+					} else {
+						return existingStringConverter.convert(type, value);
+					}
+				}
+			};
+			cub.register(delegatingConverter, converter.targetClass());
+			cub.register(delegatingConverter, String.class);
 		}
 	}
 
@@ -47,7 +60,7 @@ class CommonCode {
 		if (formBindingParam != null) {
 			key = formBindingParam.paramName();
 			key = key.trim();
-			if (key == "") {
+			if (key.equals("")) {
 				key = null;
 			} else {
 				if (!JAVA_FIELD_PATTERN.matcher(key).matches()) {

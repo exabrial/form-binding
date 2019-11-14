@@ -1,18 +1,16 @@
 package com.github.exabrial.formbinding.spi.model;
 
+import com.github.exabrial.formbinding.FormBindingParam;
+
 public class CustomBean {
-	private String field;
+	@FormBindingParam
+	private TestField testField;
 
-	public String getField() {
-		return field;
+	public TestField getTestField() {
+		return testField;
 	}
 
-	public void setField(String field) {
-		this.field = field;
-	}
-
-	@Override
-	public String toString() {
-		return "CustomBean [field=" + field + "]";
+	public void setTestField(TestField testField) {
+		this.testField = testField;
 	}
 }

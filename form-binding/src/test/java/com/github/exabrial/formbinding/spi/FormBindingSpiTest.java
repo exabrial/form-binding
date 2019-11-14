@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import com.github.exabrial.formbinding.FormBindingReader;
 import com.github.exabrial.formbinding.FormBindingWriter;
 import com.github.exabrial.formbinding.spi.model.CustomBean;
+import com.github.exabrial.formbinding.spi.model.TestField;
 import com.github.exabrial.formbinding.test.model.SpiCelebration;
 
 class FormBindingSpiTest {
@@ -33,14 +34,15 @@ class FormBindingSpiTest {
 	void testSpi_FormBindingConverter_writer() {
 		CustomBean customBean = new CustomBean();
 		String testPayload = "this is the test payload";
-		customBean.setField(testPayload);
+		customBean.setTestField(new TestField());
+		customBean.getTestField().setValue(testPayload);
 		String writerOutput = writer.write(customBean);
-		assertEquals("field=this+is+the+test+payloadWHOOMPITWORKS", writerOutput);
+		assertEquals("testField=this+is+the+test+payloadWHOOMPITWORKS", writerOutput);
 	}
 
 	@Test
 	void testSpi_FormBindingConverter_reader() {
-		CustomBean read = reader.read("arbitrary input", CustomBean.class);
-		assertEquals("this was set by the converter", read.getField());
+		CustomBean read = reader.read("testField=arbitraryInput", CustomBean.class);
+		assertEquals("this was set by the converter", read.getTestField().getValue());
 	}
 }
