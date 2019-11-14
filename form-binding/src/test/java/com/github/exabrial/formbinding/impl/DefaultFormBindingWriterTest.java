@@ -2,12 +2,15 @@ package com.github.exabrial.formbinding.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.math.BigDecimal;
+
 import org.junit.jupiter.api.Test;
 
 import com.github.exabrial.formbinding.test.model.ComplexObject;
 import com.github.exabrial.formbinding.test.model.MixedAnnotations;
 import com.github.exabrial.formbinding.test.model.NoAnnotations;
 import com.github.exabrial.formbinding.test.model.NoAnnotationsWithTransient;
+import com.github.exabrial.formbinding.test.model.VeryComplexObject;
 
 class DefaultFormBindingWriterTest {
 	private DefaultFormBindingWriter writer = new DefaultFormBindingWriter();
@@ -35,5 +38,17 @@ class DefaultFormBindingWriterTest {
 		String value = writer.write(new ComplexObject());
 		assertEquals("intValue=42&mix=MixedAnnotations+%5BheresAField%3DHere%27s+a+field%21%21%21%2C"
 				+ "+ignoreMe%3DDon%27t+encode+this%21%21%2C+heresANonAnnotatedField%3DIt+shouldn%27t+be+included%5D&value", value);
+	}
+
+	@Test
+	void testWrite_VeryComplexObject() {
+		VeryComplexObject object = new VeryComplexObject();
+		object.testInt = -1;
+		object.wrapperLong = 42;
+		object.bigDecimal = BigDecimal.valueOf(1234L);
+		object.testDouble = 4.2;
+		object.stringParam = "testParam";
+		String value = writer.write(object);
+		assertEquals("stringParam=testParam&testInt=-1&wrapperLong=42&bigDecimal=1234&testDouble=4.2", value);
 	}
 }
