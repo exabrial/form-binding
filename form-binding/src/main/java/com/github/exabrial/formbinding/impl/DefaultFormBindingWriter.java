@@ -3,18 +3,14 @@ package com.github.exabrial.formbinding.impl;
 import static com.github.exabrial.formbinding.impl.CommonCode.extractBoundFields;
 import static com.github.exabrial.formbinding.impl.CommonCode.extractKey;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
+import java.net.URLEncoder;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.beanutils.ConvertUtilsBean;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.message.BasicNameValuePair;
 
 import com.github.exabrial.formbinding.FormBindingWriter;
 
@@ -31,15 +27,6 @@ public class DefaultFormBindingWriter implements FormBindingWriter {
 		Set<Field> boundFields = extractBoundFields(object.getClass());
 		Map<String, String> values = convertToMap(object, boundFields);
 		String result = convertMapToString(values);
-		return result;
-	}
-
-	private static String convertMapToString(Map<String, String> values) {
-		List<NameValuePair> formParams = new ArrayList<NameValuePair>(values.size());
-		for (String key : values.keySet()) {
-			formParams.add(new BasicNameValuePair(key, values.get(key)));
-		}
-		String result = URLEncodedUtils.format(formParams, StandardCharsets.UTF_8);
 		return result;
 	}
 
@@ -65,5 +52,19 @@ public class DefaultFormBindingWriter implements FormBindingWriter {
 		} catch (IllegalArgumentException | IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	private static String convertMapToString(Map<String, String> map) {
+		StringBuilder sb = new StringBuilder();
+		map.entrySet().stream().forEach(entry -> {
+			try {
+				(entry.getValue() == null ? sb.append(entry.getKey())
+						: sb.append(entry.getKey()).append('=').append(URLEncoder.encode(entry.getValue(), "UTF-8"))).append('&');
+			} catch (UnsupportedEncodingException e) {
+				throw new RuntimeException(e);
+			}
+		});
+		sb.delete(sb.length() - 1, sb.length());
+		return sb.toString();
 	}
 }

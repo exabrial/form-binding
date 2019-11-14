@@ -2,15 +2,17 @@ package com.github.exabrial.formbinding.impl;
 
 import static com.github.exabrial.formbinding.impl.CommonCode.extractBoundFields;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
+import java.net.URLDecoder;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
 import org.apache.commons.beanutils.ConvertUtilsBean;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.utils.URLEncodedUtils;
 
 import com.github.exabrial.formbinding.FormBindingReader;
 
@@ -25,17 +27,16 @@ public class DefaultFormBindingReader implements FormBindingReader {
 	@Override
 	public <ReturnType> ReturnType read(String input, Class<ReturnType> returnTypeClazz) {
 		try {
-			List<NameValuePair> formParams = URLEncodedUtils.parse(input, StandardCharsets.UTF_8);
 			Set<Field> boundFields = extractBoundFields(returnTypeClazz);
 			ReturnType returnValue = returnTypeClazz.newInstance();
-			for (NameValuePair pair : formParams) {
-				String name = pair.getName();
-				String value = pair.getValue();
-				Field field = findMatchingField(name, boundFields);
+			Map<String, String> valueMap = splitQuery(input);
+			for (String key : valueMap.keySet()) {
+				Field field = findMatchingField(key, boundFields);
 				if (field != null) {
 					field.setAccessible(true);
 					Class<?> type = field.getType();
-					Object object = cub.convert(value, type);
+
+					Object object = cub.convert(valueMap.get(key), type);
 					field.set(returnValue, object);
 				}
 			}
@@ -56,5 +57,34 @@ public class DefaultFormBindingReader implements FormBindingReader {
 	private static boolean paramMatches(Field element, String name) {
 		String key = CommonCode.extractKey(element);
 		return key != null && key.equals(name);
+	}
+
+	private Map<String, String> splitQuery(String form) {
+		if (form == null || (form = form.trim()).equals("")) {
+			return Collections.emptyMap();
+		} else {
+			Map<String, String> map = new HashMap<String, String>();
+			Arrays.stream(form.split("&")).map(this::splitQueryParameter).forEach(pair -> map.put(pair[0], pair[1]));
+			return map;
+		}
+	}
+
+	private String[] splitQueryParameter(String it) {
+		String[] split = it.split("=");
+		String value;
+		if (split.length > 0) {
+			value = decode(split[1]);
+		} else {
+			value = null;
+		}
+		return new String[] { split[0], value };
+	}
+
+	private String decode(String value) {
+		try {
+			return URLDecoder.decode(value, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }
