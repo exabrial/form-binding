@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.exabrial</groupId>
 	<artifactId>form-binding-parent</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<description>Form URL Encoding binding</description>
 	<name>${project.artifactId}</name>
@@ -13,7 +13,7 @@
 		<connection>scm:git:ssh://git@github.com/exabrial/form-binding.git</connection>
 		<developerConnection>scm:git:ssh://git@github.com/exabrial/form-binding.git</developerConnection>
 		<url>https://github.com/exabrial/form-binding/tree/master</url>
-		<tag>form-binding-parent-1.0.0</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<properties>
