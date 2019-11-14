@@ -1,6 +1,7 @@
 package com.github.exabrial.formbinding.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.math.BigDecimal;
 
@@ -14,6 +15,11 @@ import com.github.exabrial.formbinding.test.model.VeryComplexObject;
 
 class DefaultFormBindingWriterTest {
 	private DefaultFormBindingWriter writer = new DefaultFormBindingWriter();
+
+	@Test
+	void testRead_null() {
+		assertNull(writer.write(null));
+	}
 
 	@Test
 	void testWrite_MixedAnnotations() {
@@ -48,6 +54,7 @@ class DefaultFormBindingWriterTest {
 		object.bigDecimal = BigDecimal.valueOf(1234L);
 		object.testDouble = 4.2;
 		object.stringParam = "testParam";
+		object.ignored = true;
 		String value = writer.write(object);
 		assertEquals("stringParam=testParam&testInt=-1&wrapperLong=42&bigDecimal=1234&testDouble=4.2", value);
 	}

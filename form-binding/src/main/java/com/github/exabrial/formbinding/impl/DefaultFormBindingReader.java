@@ -18,22 +18,27 @@ public class DefaultFormBindingReader implements FormBindingReader {
 
 	@Override
 	public <ReturnType> ReturnType read(String input, Class<ReturnType> returnTypeClazz) {
-		try {
-			Set<Field> boundFields = extractBoundFields(returnTypeClazz);
-			ReturnType returnValue = returnTypeClazz.newInstance();
-			Map<String, String> valueMap = splitQuery(input);
-			for (String key : valueMap.keySet()) {
-				Field field = findMatchingField(key, boundFields);
-				if (field != null) {
-					field.setAccessible(true);
-					Class<?> type = field.getType();
-					Object object = CommonCode.cub.convert(valueMap.get(key), type);
-					field.set(returnValue, object);
+		if (returnTypeClazz != null && input != null) {
+			input = input.trim();
+			try {
+				Set<Field> boundFields = extractBoundFields(returnTypeClazz);
+				ReturnType returnValue = returnTypeClazz.newInstance();
+				Map<String, String> valueMap = splitQuery(input);
+				for (String key : valueMap.keySet()) {
+					Field field = findMatchingField(key, boundFields);
+					if (field != null) {
+						field.setAccessible(true);
+						Class<?> type = field.getType();
+						Object object = CommonCode.cub.convert(valueMap.get(key), type);
+						field.set(returnValue, object);
+					}
 				}
+				return returnValue;
+			} catch (InstantiationException | IllegalAccessException e) {
+				throw new RuntimeException(e);
 			}
-			return returnValue;
-		} catch (InstantiationException | IllegalAccessException e) {
-			throw new RuntimeException(e);
+		} else {
+			return null;
 		}
 	}
 

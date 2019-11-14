@@ -1,6 +1,8 @@
 package com.github.exabrial.formbinding.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.math.BigDecimal;
 
@@ -13,11 +15,14 @@ class DefaultFormBindingReaderTest {
 	private DefaultFormBindingReader reader = new DefaultFormBindingReader();
 
 	@Test
-	void testRead_mixedAnnnotations() {
-		String payload = "ThisIsATest";
-		String input = "differentName=" + payload;
-		MixedAnnotations mixedAnnotations = reader.read(input, MixedAnnotations.class);
-		assertEquals(payload, mixedAnnotations.getHeresAField());
+	void testRead_null() {
+		assertNull(reader.read(null, MixedAnnotations.class));
+		assertNull(reader.read("a=b", null));
+	}
+
+	@Test
+	void testRead_empty() {
+		assertNotNull(reader.read("", MixedAnnotations.class));
 	}
 
 	@Test
@@ -29,8 +34,9 @@ class DefaultFormBindingReaderTest {
 		object.testDouble = 4.2;
 		object.stringParam = "testParam";
 		VeryComplexObject readValue = reader.read(
-				"date=Wed+Dec+31+18%3A00%3A00+CST+1969&stringParam=testParam&testInt=-1&wrapperLong=42&bigDecimal=1234&testDouble=4.2",
+				"ignored=true&date=Wed+Dec+31+18%3A00%3A00+CST+1969&stringParam=testParam&testInt=-1&wrapperLong=42&bigDecimal=1234&testDouble=4.2",
 				VeryComplexObject.class);
 		assertEquals(object, readValue);
+		assertNull(readValue.ignored);
 	}
 }

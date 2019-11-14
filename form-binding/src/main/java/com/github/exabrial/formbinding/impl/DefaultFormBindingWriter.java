@@ -15,10 +15,14 @@ import com.github.exabrial.formbinding.FormBindingWriter;
 public class DefaultFormBindingWriter implements FormBindingWriter {
 	@Override
 	public String write(Object object) {
-		Set<Field> boundFields = extractBoundFields(object.getClass());
-		Map<String, String> values = convertToMap(object, boundFields);
-		String result = convertMapToString(values);
-		return result;
+		if (object == null) {
+			return null;
+		} else {
+			Set<Field> boundFields = extractBoundFields(object.getClass());
+			Map<String, String> values = convertToMap(object, boundFields);
+			String result = convertMapToString(values);
+			return result;
+		}
 	}
 
 	private Map<String, String> convertToMap(Object object, Set<Field> boundFields) {
