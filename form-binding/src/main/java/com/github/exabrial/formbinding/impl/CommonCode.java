@@ -23,6 +23,7 @@ class CommonCode {
 		cub = new ConvertUtilsBean();
 		ServiceLoader<FormBindingConverter> serviceLoader = ServiceLoader.load(FormBindingConverter.class);
 		for (FormBindingConverter converter : serviceLoader) {
+			System.out.println("FormBindingConverter Registered:" + converter.getClass().getSimpleName());
 			cub.register(converter, converter.targetClass());
 		}
 	}
@@ -58,12 +59,5 @@ class CommonCode {
 			key = field.getName();
 		}
 		return key;
-	}
-
-	static void loadSpiConverters(ConvertUtilsBean cub) {
-		ServiceLoader<FormBindingConverter> serviceLoader = ServiceLoader.load(FormBindingConverter.class);
-		for (FormBindingConverter converter : serviceLoader) {
-			cub.register(converter, converter.targetClass());
-		}
 	}
 }
