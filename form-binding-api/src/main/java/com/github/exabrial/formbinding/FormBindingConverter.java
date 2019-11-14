@@ -1,4 +1,4 @@
-package com.github.exabrial.formbinding.converter;
+package com.github.exabrial.formbinding;
 
 import org.apache.commons.beanutils.Converter;
 

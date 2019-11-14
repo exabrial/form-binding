@@ -7,8 +7,6 @@ import com.github.exabrial.formbinding.FormBindingReader;
 import com.github.exabrial.formbinding.FormBindingWriter;
 
 public final class FormBinding {
-	private static final String DEFAULT_READER = "com.github.exabrial.formbinding.impl.DefaultFormBindingReader";
-	private static final String DEFAULT_WRITER = "com.github.exabrial.formbinding.impl.DefaultFormBindingWriter";
 	private static final ServiceLoader<FormBindingReader> formBindingReaderServices;
 	private static final ServiceLoader<FormBindingWriter> formBindingWriterServices;
 
@@ -20,9 +18,10 @@ public final class FormBinding {
 	public static FormBindingReader getReader() {
 		FormBindingReader formBindingReader = loadFirstReader();
 		if (formBindingReader == null) {
-			formBindingReader = forceDefaultReader();
+			throw new RuntimeException("The Java SPI system could not locate a FormBindingReader implementation");
+		} else {
+			return formBindingReader;
 		}
-		return formBindingReader;
 	}
 
 	public static FormBindingReader getReader(String providerName) {
@@ -45,23 +44,13 @@ public final class FormBinding {
 		return formBindingReader;
 	}
 
-	private static FormBindingReader forceDefaultReader() {
-		try {
-			Class<?> clazz = Class.forName(DEFAULT_WRITER);
-			return (FormBindingReader) clazz.newInstance();
-		} catch (ClassNotFoundException cnfe) {
-			throw new RuntimeException("FormBinding provider " + DEFAULT_READER + " not found", cnfe);
-		} catch (Exception exception) {
-			throw new RuntimeException("FormBinding provider " + DEFAULT_READER + " could not be instantiated: " + exception, exception);
-		}
-	}
-
 	public static FormBindingWriter getWriter() {
 		FormBindingWriter formBindingWriter = loadFirstWriter();
 		if (formBindingWriter == null) {
-			formBindingWriter = forceDefaultWriter();
+			throw new RuntimeException("The Java SPI system could not locate a FormBindingWriter implementation");
+		} else {
+			return formBindingWriter;
 		}
-		return formBindingWriter;
 	}
 
 	public static FormBindingWriter getWriter(String providerName) {
@@ -84,14 +73,4 @@ public final class FormBinding {
 		return formBindingWriter;
 	}
 
-	private static FormBindingWriter forceDefaultWriter() {
-		try {
-			Class<?> clazz = Class.forName(DEFAULT_WRITER);
-			return (FormBindingWriter) clazz.newInstance();
-		} catch (ClassNotFoundException cnfe) {
-			throw new RuntimeException("FormBinding provider " + DEFAULT_WRITER + " not found", cnfe);
-		} catch (Exception exception) {
-			throw new RuntimeException("FormBinding provider " + DEFAULT_WRITER + " could not be instantiated: " + exception, exception);
-		}
-	}
 }

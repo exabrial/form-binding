@@ -72,7 +72,7 @@ public class DefaultFormBindingReader implements FormBindingReader {
 	private String[] splitQueryParameter(String it) {
 		String[] split = it.split("=");
 		String value;
-		if (split.length > 0) {
+		if (split.length > 1) {
 			value = decode(split[1]);
 		} else {
 			value = null;

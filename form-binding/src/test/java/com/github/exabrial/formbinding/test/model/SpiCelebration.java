@@ -7,4 +7,12 @@ public class SpiCelebration {
 	public String toString() {
 		return "SpiCelebration [spiWorks=" + spiWorks + "]";
 	}
+
+	public String getSpiWorks() {
+		return spiWorks;
+	}
+
+	public void setSpiWorks(String spiWorks) {
+		this.spiWorks = spiWorks;
+	}
 }

@@ -10,9 +10,9 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.beanutils.ConvertUtilsBean;
 
+import com.github.exabrial.formbinding.FormBindingConverter;
 import com.github.exabrial.formbinding.FormBindingParam;
 import com.github.exabrial.formbinding.FormBindingTransient;
-import com.github.exabrial.formbinding.converter.FormBindingConverter;
 
 @SuppressWarnings("unchecked")
 class CommonCode {
