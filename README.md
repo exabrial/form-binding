@@ -2,6 +2,30 @@
 
 I looked far and wide and was surprised that there was no annotation based way to bind Form URL Encoded string to a Java Object. Think of this project like JAX-B or JSON-B, but for Form URL Encoding.
 
+Wouldn't it be nice to create this form:
+
+```
+key=AGreatSuccess&anInt=42
+```
+
+From this object:
+
+```
+public class TestObject {
+	private String key = "AGreatSuccess";
+	private int anInt = 42;
+}
+```
+
+With on line of code:
+
+```
+String form = writer.write(new TestObject());
+```
+
+Yes. Yes it would. Oh and there's a JAX-RS integration: MessageBodyReader and MessageBodyWriter that produces/consumes `application/x-www-form-urlencoded`!
+
+
 ## License
 All files are Licensed Apache Source License 2.0. Please consider contributing back any changes you may make, thanks!
 
@@ -82,5 +106,58 @@ On the returned object, `heresAField` the field will be set to: `ConvertingBackT
 * Bean Utils does pretty good job with basic types, but if you have nested objects, you'll want to implement your own converter.
 * Simply implement that `FormBindingConverter` interface, then put a file in `META-INF/services` named `com.github.exabrial.formbinding.FormBindingConverter`
 * Inside this file, put the fully qualified classname of your custom implementation
-* See https://github.com/exabrial/form-binding/tree/master/form-binding-test-module for a complete example
+* See https://github.com/exabrial/form-binding/tree/master/form-binding-test-module for an example
 
+
+### JAX-RS
+
+#### Server 
+
+* Accept forms easily without a ton of silly `@FormParam` annotations!
+
+```
+@ApplicationPath("/api/1.0")
+public class RestApplication extends Application {
+	@Override
+	public Set<Class<?>> getClasses() {
+		return new HashSet<Class<?>>(Arrays.asList(new Class<?>[] { RestResource.class, FormBindingMessageBodyReader.class }));
+	}
+}
+```
+
+```
+@ApplicationScoped
+@Path("/testObject")
+@Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
+public class RestResource {
+	@POST
+	public void testObjectForm(TestObject testObject) {
+		System.out.println(testObject);
+	}
+}
+```
+
+#### Client
+
+* Post an http form to a URL without creating an intermediary MultiValuedMap or JAX-RS `javax.ws.rs.core.Form` class:
+
+```
+public void postTestObject(TestObject testObject) {
+	Client client = ClientBuilder.newClient();
+	client.register(FormBindingMessageBodyWriter.class);
+	client.target("http://example.com").path("testObject").request().post(Entity.entity(testObject, MediaType.APPLICATION_FORM_URLENCODED));
+	client.close();
+}
+```
+
+* Read a `application/x-www-form-urlencoded` response back from a REST service!
+
+```
+public TestObject getTestObject() {
+	Client client = ClientBuilder.newClient();
+	client.register(FormBindingMessageBodyReader.class);
+	TestObject testObject = client.target("http://example.com").path("testObject").request().accept(MediaType.APPLICATION_FORM_URLENCODED).get(TestObject.class);
+	client.close();
+	return testObject;
+}
+```

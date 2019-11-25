@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.github.exabrial</groupId>
@@ -7,8 +10,8 @@
 		<version>1.1.0-SNAPSHOT</version>
 	</parent>
 	<packaging>jar</packaging>
-	<artifactId>form-binding</artifactId>
-	<description>Form URL Encoding binding Implementation</description>
+	<artifactId>form-binding-jaxrs</artifactId>
+	<description>JAX-RS Message Body Reader and Writers for automatic form binding</description>
 	<name>${project.artifactId}</name>
 
 	<dependencies>
@@ -18,25 +21,19 @@
 			<version>1.1.0-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.reflections</groupId>
-			<artifactId>reflections</artifactId>
-			<version>0.9.11</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>commons-beanutils</groupId>
-			<artifactId>commons-beanutils</artifactId>
-			<version>1.9.4</version>
-			<scope>compile</scope>
-		</dependency>
-
 
 		<dependency>
 			<groupId>com.github.exabrial</groupId>
-			<artifactId>form-binding-test-module</artifactId>
+			<artifactId>form-binding</artifactId>
 			<version>1.1.0-SNAPSHOT</version>
-			<scope>test</scope>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>javax.ws.rs-api</artifactId>
+			<version>2.1.1</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
