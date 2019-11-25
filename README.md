@@ -111,7 +111,26 @@ On the returned object, `heresAField` the field will be set to: `ConvertingBackT
 
 ### JAX-RS
 
-#### Server 
+
+#### Maven Coordinates
+
+```
+<dependency>
+	<groupId>com.github.exabrial</groupId>
+	<artifactId>form-binding-jaxrs</artifactId>
+	<version>SEE THE RELEASES TAB FOR VERSION NUMBER</version>
+	<scope>compile</scope>
+</dependency>
+
+<dependency>
+	<groupId>com.github.exabrial</groupId>
+	<artifactId>form-binding</artifactId>
+	<version>SEE THE RELEASES TAB FOR VERSION NUMBER</version>
+	<scope>runtime</scope>
+</dependency>
+```
+
+#### Server
 
 * Accept forms easily without a ton of silly `@FormParam` annotations!
 
@@ -150,7 +169,7 @@ public void postTestObject(TestObject testObject) {
 }
 ```
 
-* Read a `application/x-www-form-urlencoded` response back from a REST service!
+* Read an `application/x-www-form-urlencoded` response back from a REST service!
 
 ```
 public TestObject getTestObject() {
