@@ -7,25 +7,25 @@ import com.github.exabrial.formbinding.FormBindingReader;
 import com.github.exabrial.formbinding.FormBindingWriter;
 
 public final class FormBinding {
-	private static final ServiceLoader<FormBindingReader> formBindingReaderServices;
-	private static final ServiceLoader<FormBindingWriter> formBindingWriterServices;
-
-	static {
-		formBindingReaderServices = ServiceLoader.load(FormBindingReader.class);
-		formBindingWriterServices = ServiceLoader.load(FormBindingWriter.class);
+	public static FormBindingReader getReader() {
+		return getReader(null);
 	}
 
-	public static FormBindingReader getReader() {
-		FormBindingReader formBindingReader = loadFirstReader();
-		if (formBindingReader == null) {
-			throw new RuntimeException("The Java SPI system could not locate a FormBindingReader implementation");
+	public static FormBindingReader getReader(ClassLoader classLoader) {
+		Iterator<FormBindingReader> iterator = ServiceLoader.load(FormBindingReader.class, classLoader).iterator();
+		if (iterator.hasNext()) {
+			return iterator.next();
 		} else {
-			return formBindingReader;
+			throw new RuntimeException("The Java SPI system could not locate a FormBindingReader implementation");
 		}
 	}
 
-	public static FormBindingReader getReader(String providerName) {
-		for (FormBindingReader formBindingReader : formBindingReaderServices) {
+	public static FormBindingReader getReaderByName(String providerName) {
+		return getReaderByName(providerName, null);
+	}
+
+	public static FormBindingReader getReaderByName(String providerName, ClassLoader classLoader) {
+		for (FormBindingReader formBindingReader : ServiceLoader.load(FormBindingReader.class, classLoader)) {
 			if (formBindingReader.getClass().getName().equals(providerName)) {
 				return formBindingReader;
 			}
@@ -33,44 +33,29 @@ public final class FormBinding {
 		throw new RuntimeException("FormBinding provider " + providerName + " not found");
 	}
 
-	private static FormBindingReader loadFirstReader() {
-		Iterator<FormBindingReader> iterator = formBindingReaderServices.iterator();
-		FormBindingReader formBindingReader;
-		if (iterator.hasNext()) {
-			formBindingReader = iterator.next();
-		} else {
-			formBindingReader = null;
-		}
-		return formBindingReader;
-	}
-
 	public static FormBindingWriter getWriter() {
-		FormBindingWriter formBindingWriter = loadFirstWriter();
-		if (formBindingWriter == null) {
-			throw new RuntimeException("The Java SPI system could not locate a FormBindingWriter implementation");
+		return getWriter(null);
+	}
+
+	public static FormBindingWriter getWriter(ClassLoader classLoader) {
+		Iterator<FormBindingWriter> iterator = ServiceLoader.load(FormBindingWriter.class, classLoader).iterator();
+		if (iterator.hasNext()) {
+			return iterator.next();
 		} else {
-			return formBindingWriter;
+			throw new RuntimeException("The Java SPI system could not locate a FormBindingWriter implementation");
 		}
 	}
 
-	public static FormBindingWriter getWriter(String providerName) {
-		for (FormBindingWriter formBindingWriter : formBindingWriterServices) {
+	public static FormBindingWriter getWriterByName(String providerName) {
+		return getWriterByName(providerName, null);
+	}
+
+	public static FormBindingWriter getWriterByName(String providerName, ClassLoader classLoader) {
+		for (FormBindingWriter formBindingWriter : ServiceLoader.load(FormBindingWriter.class, classLoader)) {
 			if (formBindingWriter.getClass().getName().equals(providerName)) {
 				return formBindingWriter;
 			}
 		}
 		throw new RuntimeException("FormBinding provider " + providerName + " not found");
 	}
-
-	private static FormBindingWriter loadFirstWriter() {
-		Iterator<FormBindingWriter> iterator = formBindingWriterServices.iterator();
-		FormBindingWriter formBindingWriter;
-		if (iterator.hasNext()) {
-			formBindingWriter = iterator.next();
-		} else {
-			formBindingWriter = null;
-		}
-		return formBindingWriter;
-	}
-
 }
