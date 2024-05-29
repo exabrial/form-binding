@@ -20,7 +20,7 @@ public class TestObject {
 With on line of code:
 
 ```
-String form = writer.write(new TestObject());
+final String form = writer.write(new TestObject());
 ```
 
 Yes. Yes it would. Oh and there's a JAX-RS integration: MessageBodyReader and MessageBodyWriter that produces/consumes `application/x-www-form-urlencoded`!
