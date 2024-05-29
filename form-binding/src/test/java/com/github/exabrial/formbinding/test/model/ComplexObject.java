@@ -3,14 +3,14 @@ package com.github.exabrial.formbinding.test.model;
 import com.github.exabrial.formbinding.FormBindingTransient;
 
 public class ComplexObject {
-	private MixedAnnotations mix = new MixedAnnotations();
-	private int intValue = 42;
-	private String value = null;
+	private final MixedAnnotations mix = new MixedAnnotations();
+	private final int intValue = 42;
+	private final String nullValue = null;
 	@FormBindingTransient
 	private NoAnnotationsWithTransient ignore;
 
 	@Override
 	public String toString() {
-		return "ComplexObject [mix=" + mix + ", intValue=" + intValue + ", value=" + value + ", ignore=" + ignore + "]";
+		return "ComplexObject [mix=" + mix + ", intValue=" + intValue + ", nullValue=" + nullValue + ", ignore=" + ignore + "]";
 	}
 }

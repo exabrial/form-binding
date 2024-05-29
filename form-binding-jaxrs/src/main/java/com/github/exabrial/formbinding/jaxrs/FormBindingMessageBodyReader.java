@@ -25,7 +25,7 @@ public class FormBindingMessageBodyReader<T> implements MessageBodyReader<T> {
 	private static final FormBindingReader reader = FormBinding.getReader();
 
 	@Override
-	public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
+	public boolean isReadable(final Class<?> type, final Type genericType, final Annotation[] annotations, final MediaType mediaType) {
 		if (type.isAssignableFrom(Form.class) || type.isAssignableFrom(Collections.class)
 				|| !mediaType.equals(MediaType.APPLICATION_FORM_URLENCODED_TYPE)) {
 			return false;
@@ -35,8 +35,8 @@ public class FormBindingMessageBodyReader<T> implements MessageBodyReader<T> {
 	}
 
 	@Override
-	public T readFrom(Class<T> type, Type genericType, Annotation[] annotations, MediaType mediaType,
-			MultivaluedMap<String, String> httpHeaders, InputStream entityStream) throws IOException, WebApplicationException {
+	public T readFrom(final Class<T> type, final Type genericType, final Annotation[] annotations, final MediaType mediaType,
+			final MultivaluedMap<String, String> httpHeaders, final InputStream entityStream) throws IOException, WebApplicationException {
 		String input;
 		try (Scanner scanner = new Scanner(entityStream, StandardCharsets.UTF_8.name())) {
 			input = scanner.useDelimiter("\\A").next();

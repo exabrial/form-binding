@@ -17,19 +17,19 @@ import com.github.exabrial.formbinding.FormBindingReader;
 public class DefaultFormBindingReader implements FormBindingReader {
 
 	@Override
-	public <ReturnType> ReturnType read(String input, Class<ReturnType> returnTypeClazz) {
+	public <ReturnType> ReturnType read(String input, final Class<ReturnType> returnTypeClazz) {
 		if (returnTypeClazz != null && input != null) {
 			input = input.trim();
 			try {
-				Set<Field> boundFields = extractBoundFields(returnTypeClazz);
-				ReturnType returnValue = returnTypeClazz.newInstance();
-				Map<String, String> valueMap = splitQuery(input);
-				for (String key : valueMap.keySet()) {
-					Field field = findMatchingField(key, boundFields);
+				final Set<Field> boundFields = extractBoundFields(returnTypeClazz);
+				final ReturnType returnValue = returnTypeClazz.newInstance();
+				final Map<String, String> valueMap = splitQuery(input);
+				for (final String key : valueMap.keySet()) {
+					final Field field = findMatchingField(key, boundFields);
 					if (field != null) {
 						field.setAccessible(true);
-						Class<?> type = field.getType();
-						Object object = CommonCode.cub.convert(valueMap.get(key), type);
+						final Class<?> type = field.getType();
+						final Object object = CommonCode.cub.convert(valueMap.get(key), type);
 						field.set(returnValue, object);
 					}
 				}
@@ -42,16 +42,16 @@ public class DefaultFormBindingReader implements FormBindingReader {
 		}
 	}
 
-	private static Field findMatchingField(String name, Set<Field> boundFields) {
+	private static Field findMatchingField(final String name, final Set<Field> boundFields) {
 		try {
 			return boundFields.stream().filter(element -> paramMatches(element, name)).findFirst().get();
-		} catch (NoSuchElementException e) {
+		} catch (final NoSuchElementException e) {
 			return null;
 		}
 	}
 
-	private static boolean paramMatches(Field element, String name) {
-		String key = CommonCode.extractKey(element);
+	private static boolean paramMatches(final Field element, final String name) {
+		final String key = CommonCode.extractKey(element);
 		return key != null && key.equals(name);
 	}
 
@@ -59,14 +59,14 @@ public class DefaultFormBindingReader implements FormBindingReader {
 		if (form == null || (form = form.trim()).equals("")) {
 			return Collections.emptyMap();
 		} else {
-			Map<String, String> map = new HashMap<String, String>();
+			final Map<String, String> map = new HashMap<>();
 			Arrays.stream(form.split("&")).map(this::splitQueryParameter).forEach(pair -> map.put(pair[0], pair[1]));
 			return map;
 		}
 	}
 
-	private String[] splitQueryParameter(String it) {
-		String[] split = it.split("=");
+	private String[] splitQueryParameter(final String it) {
+		final String[] split = it.split("=");
 		String value;
 		if (split.length > 1) {
 			value = decode(split[1]);
@@ -76,10 +76,10 @@ public class DefaultFormBindingReader implements FormBindingReader {
 		return new String[] { split[0], value };
 	}
 
-	private String decode(String value) {
+	private String decode(final String value) {
 		try {
 			return URLDecoder.decode(value, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
+		} catch (final UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
 		}
 	}

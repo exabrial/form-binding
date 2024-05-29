@@ -24,7 +24,7 @@ public class FormBindingMessageBodyWriter<T> implements MessageBodyWriter<T> {
 	private static final FormBindingWriter writer = FormBinding.getWriter();
 
 	@Override
-	public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
+	public boolean isWriteable(final Class<?> type, final Type genericType, final Annotation[] annotations, final MediaType mediaType) {
 		if (type.isAssignableFrom(Form.class) || type.isAssignableFrom(Collections.class)
 				|| !mediaType.equals(MediaType.APPLICATION_FORM_URLENCODED_TYPE)) {
 			return false;
@@ -34,10 +34,10 @@ public class FormBindingMessageBodyWriter<T> implements MessageBodyWriter<T> {
 	}
 
 	@Override
-	public void writeTo(T t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType,
-			MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException, WebApplicationException {
+	public void writeTo(final T t, final Class<?> type, final Type genericType, final Annotation[] annotations, final MediaType mediaType,
+			final MultivaluedMap<String, Object> httpHeaders, final OutputStream entityStream) throws IOException, WebApplicationException {
 		try (PrintWriter pw = new PrintWriter(entityStream)) {
-			String form = writer.write(t);
+			final String form = writer.write(t);
 			pw.write(form);
 		}
 	}

@@ -10,7 +10,7 @@ public class CustomBean {
 		return testField;
 	}
 
-	public void setTestField(TestField testField) {
+	public void setTestField(final TestField testField) {
 		this.testField = testField;
 	}
 }

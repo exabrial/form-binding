@@ -7,7 +7,7 @@ public class TestField {
 		return value;
 	}
 
-	public void setValue(String value) {
+	public void setValue(final String value) {
 		this.value = value;
 	}
 
